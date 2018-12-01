@@ -1,18 +1,31 @@
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io;
+use std::io::{BufRead, BufReader, Error, ErrorKind};
 
-fn main() {
-    let f = File::open("input").expect("input not found");
+
+fn read_ints(path: &str) -> Result<Vec<i32>, io::Error> {
+    let f = File::open(path)?;
     let f = BufReader::new(f);
-
-    let mut freq: i32 = 0;
-
+    let mut v = Vec::new();
     for line in f.lines() {
-        let line = line.expect("line read");
-
-        let i: i32 = line.trim().parse().expect("parse number");
-        freq += i;
+        let line = line?;
+        let i: i32 = line
+            .trim()
+            .parse()
+            .map_err(|e| Error::new(ErrorKind::InvalidData, e))?;
+        v.push(i);
     }
 
-    println!("freq: {:?}", freq);
+    Ok(v)
+}
+
+fn main() {
+    let mut freq: i32 = 0;
+
+    let changes = read_ints("input").expect("ints");
+
+    for i in changes.clone() {
+        freq += i;
+    }
+    println!("part1 freq: {:?}", freq);
 }
