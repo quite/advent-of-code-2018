@@ -30,6 +30,16 @@ fn exactly_n(s: &String, n: i32) -> bool {
     false
 }
 
+// Returns char indices at which strings a and b differ
+fn diff_indices(a: &String, b: &String) -> Vec<usize> {
+    a.chars()
+        .zip(b.chars())
+        .enumerate()
+        .filter(|&(_i, (a, b))| a != b)
+        .map(|(i, (_, _))| i)
+        .collect()
+}
+
 fn main() {
     let lines = read_lines("input").expect("read lines");
 
@@ -43,6 +53,18 @@ fn main() {
         }
     }
     println!("part1 checksum: {:?}", pairs * triples);
+
+    'out: for a in lines.iter() {
+        for b in lines.iter() {
+            let is = diff_indices(&a, &b);
+            if is.len() == 1 {
+                let mut s = b.clone();
+                s.remove(is[0]);
+                println!("part2 letters: {:?}", s);
+                break 'out;
+            }
+        }
+    }
 }
 
 mod tests {
