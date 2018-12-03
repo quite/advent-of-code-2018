@@ -1,8 +1,6 @@
 [package]
-name = "day3"
+name = "tools"
 version = "0.1.0"
 authors = ["Daniel Lublin <daniel@lublin.se>"]
 
 [dependencies]
-tools = { path = "../tools" }
-itertools = "0.7.11"

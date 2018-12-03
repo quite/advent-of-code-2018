@@ -1,21 +1,9 @@
-use std::fs::File;
-use std::io;
-use std::io::{BufRead, BufReader};
+extern crate tools;
+use tools::read_from_file;
 
 use std::collections::HashMap;
 #[macro_use]
 extern crate itertools;
-
-fn read_lines(path: &str) -> Result<Vec<String>, io::Error> {
-    let f = File::open(path)?;
-    let f = BufReader::new(f);
-    let mut v = Vec::new();
-    for line in f.lines() {
-        let line = line?;
-        v.push(line);
-    }
-    Ok(v)
-}
 
 fn line_to_claim(line: &str) -> Option<Claim> {
     let parsed: Vec<i32> = line
@@ -45,11 +33,11 @@ struct Claim {
 }
 
 fn main() {
-    let lines = read_lines("input").expect("read lines");
+    let input = read_from_file("input").unwrap();
 
     let mut claims: Vec<Claim> = Vec::new();
 
-    for l in lines.iter() {
+    for l in input.lines() {
         claims.push(line_to_claim(l).unwrap());
     }
 

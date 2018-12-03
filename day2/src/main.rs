@@ -1,22 +1,10 @@
-use std::fs::File;
-use std::io;
-use std::io::{BufRead, BufReader};
+extern crate tools;
+use tools::read_from_file;
 
 use std::collections::HashMap;
 
-fn read_lines(path: &str) -> Result<Vec<String>, io::Error> {
-    let f = File::open(path)?;
-    let f = BufReader::new(f);
-    let mut v = Vec::new();
-    for line in f.lines() {
-        let line = line?;
-        v.push(line);
-    }
-    Ok(v)
-}
-
 // Returns true if any letter occurs exactly n times in string s
-fn exactly_n(s: &String, n: i32) -> bool {
+fn exactly_n(s: &str, n: i32) -> bool {
     let mut counts = HashMap::new();
     for letter in s.chars() {
         let entry = counts.entry(letter).or_insert(0);
@@ -31,7 +19,7 @@ fn exactly_n(s: &String, n: i32) -> bool {
 }
 
 // Returns char indices at which strings a and b differ
-fn diff_indices(a: &String, b: &String) -> Vec<usize> {
+fn diff_indices(a: &str, b: &str) -> Vec<usize> {
     a.chars()
         .zip(b.chars())
         .enumerate()
@@ -41,10 +29,10 @@ fn diff_indices(a: &String, b: &String) -> Vec<usize> {
 }
 
 fn main() {
-    let lines = read_lines("input").expect("read lines");
+    let input = read_from_file("input").unwrap();
 
     let (mut pairs, mut triples) = (0, 0);
-    for line in lines.iter() {
+    for line in input.lines() {
         if exactly_n(&line, 2) {
             pairs += 1;
         }
@@ -54,11 +42,11 @@ fn main() {
     }
     println!("part1 checksum: {:?}", pairs * triples);
 
-    'out: for a in lines.iter() {
-        for b in lines.iter() {
+    'out: for a in input.lines() {
+        for b in input.lines() {
             let is = diff_indices(&a, &b);
             if is.len() == 1 {
-                let mut s = b.clone();
+                let mut s = b.clone().to_string();
                 s.remove(is[0]);
                 println!("part2 letters: {:?}", s);
                 break 'out;
