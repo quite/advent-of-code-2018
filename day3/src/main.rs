@@ -17,7 +17,7 @@ fn read_lines(path: &str) -> Result<Vec<String>, io::Error> {
     Ok(v)
 }
 
-fn line_to_rect(line: &str) -> Option<Rectangle> {
+fn line_to_claim(line: &str) -> Option<Claim> {
     let parsed: Vec<i32> = line
         .split(&['#', '@', ',', ':', 'x'][..])
         .map(|s| s.trim())
@@ -25,7 +25,8 @@ fn line_to_rect(line: &str) -> Option<Rectangle> {
         .map(|s| s.parse().unwrap())
         .collect();
     match parsed.as_slice() {
-        [_id, x, y, w, h] => Some(Rectangle {
+        [id, x, y, w, h] => Some(Claim {
+            id: *id,
             x: *x,
             y: *y,
             w: *w,
@@ -35,7 +36,8 @@ fn line_to_rect(line: &str) -> Option<Rectangle> {
     }
 }
 
-struct Rectangle {
+struct Claim {
+    id: i32,
     x: i32,
     y: i32,
     w: i32,
@@ -45,22 +47,22 @@ struct Rectangle {
 fn main() {
     let lines = read_lines("input").expect("read lines");
 
-    let mut rects: Vec<Rectangle> = Vec::new();
+    let mut claims: Vec<Claim> = Vec::new();
 
     for l in lines.iter() {
-        rects.push(line_to_rect(l).unwrap());
+        claims.push(line_to_claim(l).unwrap());
     }
 
     let mut overlaps = HashMap::new();
-    for r in rects.iter() {
-        for patch in iproduct!(r.x..r.x + r.w, r.y..r.y + r.h) {
+    for c in claims.iter() {
+        for patch in iproduct!(c.x..c.x + c.w, c.y..c.y + c.h) {
             let entry = overlaps.entry(patch).or_insert(0);
             *entry += 1;
         }
     }
 
     println!(
-        "part1 overlapping claims: {:?}",
+        "part1 overlapping squares: {:?}",
         overlaps
             .iter()
             .filter(|&(_patch, count)| *count >= 2)
