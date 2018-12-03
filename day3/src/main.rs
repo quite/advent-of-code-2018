@@ -15,6 +15,25 @@ fn read_lines(path: &str) -> Result<Vec<String>, io::Error> {
     Ok(v)
 }
 
+fn line_to_rect(line: &str) -> Option<Rectangle> {
+    let parsed: Vec<i32> = line
+        .split(&['#', '@', ',', ':', 'x'][..])
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .map(|s| s.parse().unwrap())
+        .collect();
+    match parsed.as_slice() {
+        [id, x, y, w, h] => Some(Rectangle {
+            id: *id,
+            x: *x,
+            y: *y,
+            x2: *x + *w,
+            y2: *y + *h,
+        }),
+        _ => None,
+    }
+}
+
 struct Rectangle {
     id: i32,
     x: i32,
@@ -29,22 +48,7 @@ fn main() {
     let mut rects: Vec<Rectangle> = Vec::new();
 
     for l in lines.iter() {
-        let parsed: Vec<i32> = l
-            .split(&['#', '@', ',', ':', 'x'][..])
-            .map(|s| s.trim())
-            .filter(|s| !s.is_empty())
-            .map(|s| s.parse().unwrap())
-            .collect();
-        match parsed.as_slice() {
-            [id, x, y, w, h] => rects.push(Rectangle {
-                id: *id,
-                x: *x,
-                y: *y,
-                x2: *x + *w,
-                y2: *y + *h,
-            }),
-            _ => (),
-        }
+        rects.push(line_to_rect(l).unwrap());
     }
 
     for r in rects.iter() {
