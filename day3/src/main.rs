@@ -68,4 +68,15 @@ fn main() {
             .filter(|&(_patch, count)| *count >= 2)
             .count()
     );
+
+    for c in claims.iter() {
+        if iproduct!(c.x..c.x + c.w, c.y..c.y + c.h)
+            .map(|p| overlaps.get(&p).unwrap())
+            .filter(|&i| *i >= 2)
+            .sum::<i32>()
+            == 0
+        {
+            println!("part2 non-overlapping claim: {:?}", c.id);
+        }
+    }
 }
