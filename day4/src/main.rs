@@ -104,4 +104,24 @@ fn main() {
     let (min, _) = minfreq.iter().max_by_key(|&(_, freq)| freq).unwrap();
 
     println!("part1, {:?} * {:?} = {:?}", id, min, id * min);
+
+    // find the minute that is most frequently slept on by any guard
+    let mut theguard = 0;
+    let mut themin = 0;
+    let mut freqhigh = 0;
+    for (id, minfreq) in guardminfreq.iter() {
+        let (min, freq) = minfreq.iter().max_by_key(|&(_, freq)| freq).unwrap();
+        if *freq > freqhigh {
+            theguard = *id;
+            themin = *min;
+            freqhigh = *freq
+        }
+    }
+
+    println!(
+        "part2, {:?} * {:?} = {:?}",
+        theguard,
+        themin,
+        theguard * themin
+    );
 }
