@@ -37,11 +37,11 @@ fn line_to_event(line: &str) -> Option<Event> {
     let cap = re.captures(line).unwrap();
 
     let timestamp = Timestamp {
-        y: cap.name("y").unwrap().as_str().parse().unwrap(),
-        m: cap.name("m").unwrap().as_str().parse().unwrap(),
-        d: cap.name("d").unwrap().as_str().parse().unwrap(),
-        hour: cap.name("hour").unwrap().as_str().parse().unwrap(),
-        min: cap.name("min").unwrap().as_str().parse().unwrap(),
+        y: cap["y"].parse().unwrap(),
+        m: cap["m"].parse().unwrap(),
+        d: cap["d"].parse().unwrap(),
+        hour: cap["hour"].parse().unwrap(),
+        min: cap["min"].parse().unwrap(),
     };
 
     let eventtype = if let Some(idstr) = cap.name("id") {
