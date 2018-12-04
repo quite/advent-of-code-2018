@@ -28,7 +28,10 @@ enum EventType {
 }
 
 fn line_to_event(line: &str) -> Option<Event> {
-    let re = Regex::new(r"^\[(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})\s(?P<hour>\d{2}):(?P<min>\d{2})\]\s(?:Guard\s#(?P<id>\d+)\sbegins.*|(?P<change>.*))$",
+    let re = Regex::new(
+        r"(?x)^\[(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})\s
+          (?P<hour>\d{2}):(?P<min>\d{2})\]\s
+          (?:Guard\s\#(?P<id>\d+)\sbegins.* | (?P<change>.*))$",
     ).unwrap();
 
     let cap = re.captures(line).unwrap();
