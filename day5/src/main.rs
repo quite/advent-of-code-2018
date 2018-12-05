@@ -27,10 +27,8 @@ fn react(polymer: &str) -> String {
     reacted
 }
 
-fn main() {
-    let input = read_from_file("input").unwrap();
-
-    let mut polymer = input.trim().to_string();
+fn fully_react(polymer: &str) -> String {
+    let mut polymer = polymer.trim().to_string();
     loop {
         let reacted = react(&polymer);
         if reacted == polymer {
@@ -38,6 +36,12 @@ fn main() {
         }
         polymer = reacted;
     }
+    polymer
+}
 
-    println!("part1 units remaining: {}", polymer.len());
+fn main() {
+    let polymer = read_from_file("input").unwrap().trim().to_string();
+
+    let reacted = fully_react(&polymer);
+    println!("part1 units remaining: {}", reacted.len());
 }
