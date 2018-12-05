@@ -44,4 +44,16 @@ fn main() {
 
     let reacted = fully_react(&polymer);
     println!("part1 units remaining: {}", reacted.len());
+
+    let mut shortest = polymer.len();
+    for ch in b'a'..=b'z' {
+        let mut shortened = polymer.clone();
+        shortened.retain(|c| c != ch as char && c != (ch as char).to_ascii_uppercase());
+        let reacted = fully_react(&shortened);
+
+        if reacted.len() < shortest {
+            shortest = reacted.len();
+        }
+    }
+    println!("part2 shortest: {}", shortest);
 }
