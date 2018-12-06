@@ -51,7 +51,7 @@ fn main() {
     }
 
     // follow the 4 borders of infinity and remove points which areas contain
-    // locations on the border infinity
+    // locations on a border
     for x in 0..=xmax {
         if let Some(northborder_point) = grid[x][0] {
             areasizes.remove(&northborder_point);
@@ -72,4 +72,20 @@ fn main() {
 
     let (_, largest) = areasizes.iter().max_by_key(|&(_, locs)| locs).unwrap();
     println!("part1 largest area: {:?}", largest);
+
+    // count number of locations ("region size") for which the sum of the
+    // distances to all the points is less than 10000
+    let mut locations = 0;
+    for x in 0..=xmax {
+        for y in 0..=ymax {
+            let mut distsum = 0;
+            for p in points.iter() {
+                distsum += mdist((x as u32, y as u32), *p);
+            }
+            if distsum < 10000 {
+                locations += 1;
+            }
+        }
+    }
+    println!("part2 region size: {:?}", locations);
 }
